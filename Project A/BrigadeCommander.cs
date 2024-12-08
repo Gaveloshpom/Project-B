@@ -8,6 +8,10 @@ namespace Project_A
 {
     public class BrigadeCommander: IPerson
     {
+        private string firstName;
+        private string lastName;
+        private int age;
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }

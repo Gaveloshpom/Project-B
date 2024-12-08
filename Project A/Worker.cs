@@ -6,13 +6,24 @@ using System.Threading.Tasks;
 
 namespace Project_A
 {
-    public class Worker: IPerson
+    public class Worker : IPerson
     {
-        public int Id { get; set; } 
+        private int id;
+        private string firstName;
+        private string lastName;
+        private int age;
+        private Specialization specialization;
+
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
         public Specialization Specialization { get; set; }
+
+        public void Promote(Specialization newSpecialization) 
+        {
+            throw new NotImplementedException();
+        }
 
         public string GetFullName()
         {
