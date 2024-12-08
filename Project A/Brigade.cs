@@ -9,6 +9,11 @@ namespace Project_A
 {
     public class Brigade
     {
+        private string name;
+        private BrigadeCommander brigadeCommander;
+        private List<Worker> workers;
+        private string location;
+
         public string Name { get; set; }
         public BrigadeCommander BrigadeCommander { get; set; }
         public List<Worker> Workers { get; set; }
