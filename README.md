@@ -120,6 +120,21 @@ public interface IPrintable
     void PrintToDisplay();
 }
 ```
+---
+## Спеціалізації
+**Доступні наступні спеціалізації робітників:**
+
+* Bricklayer
+* Carpenter
+* Drywaller
+* Electrician
+* Glazier
+* Insulator
+* Ironworker
+* Landscaper
+* Painter
+* Pipefitter
+---
 ## Використання
 
 ### Як запустити проєкт?
@@ -130,7 +145,7 @@ public interface IPrintable
 2. **Відкрити рішення у Visual Studio.**
 
 3. **Запустити проєкт**
-
+---
 ## Контакти
 
 **Автор:** Руслан Скицко 
