@@ -30,7 +30,7 @@ namespace Project_A
             throw new NotImplementedException();
         }
 
-        Worker(int id, string firstName, string lastName, int age, Specialization specialization)
+        public Worker(int id, string firstName, string lastName, int age, Specialization specialization)
         {
             throw new NotImplementedException();
         }

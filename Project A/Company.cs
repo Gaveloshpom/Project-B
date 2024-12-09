@@ -16,12 +16,22 @@ namespace Project_A
         public string Name;
         public List<Brigade> Brigades;
 
-        void AddBrigade(Brigade brigade) 
+        public Company(DateTime founded, string name) 
         {
             throw new NotImplementedException();
         }
 
-        void DeleteBrigade(Brigade brigade)
+        public void AddBrigade(Brigade brigade) 
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteBrigade(Brigade brigade)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetTotalWorkers() 
         {
             throw new NotImplementedException();
         }

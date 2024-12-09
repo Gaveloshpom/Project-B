@@ -21,7 +21,7 @@ namespace Project_A
             throw new NotImplementedException();
         }
 
-        BrigadeCommander(string firstName, string lastName) 
+        public BrigadeCommander(string firstName, string lastName, int age) 
         {
             throw new NotImplementedException();
         }

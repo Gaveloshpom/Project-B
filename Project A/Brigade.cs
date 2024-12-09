@@ -19,7 +19,7 @@ namespace Project_A
         public List<Worker> Workers { get; set; }
         public string Location;
 
-        public Brigade(string name, BrigadeCommander BrigadeCommandeк, string location) 
+        public Brigade(string name, BrigadeCommander BrigadeCommander, string location) 
         {
             throw new NotImplementedException();
         }
