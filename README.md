@@ -33,6 +33,9 @@
 - **IPrintable** — інтерфейс для друку інформації.
 - **Specialization** — перелік можливих спеціалізацій робітників.
 
+![image](https://github.com/user-attachments/assets/1b09748f-6887-41f1-9d39-f2a963b92bf7)
+
+
 ---
 
 ## Класи та інтерфейси
