@@ -117,7 +117,33 @@ namespace Test
             Assert.AreEqual(expectedOutput, actualOutput);
         }
 
+        [TestMethod]
+        [DataRow("Brigade", 4, 3, 12)]
+        [DataRow("Brig", 5, 6, 30)]
+        [DataRow("Kvitka", 2, 4, 8)]
+        public void GetTotalWorkers_ValidInput_GetsTotalWorkers(string brigName, int workersCount, int brigadesCount, int expected)
+        {
+            DateTime founded = DateTime.Parse("2024-06-01");
+            Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), "Drywaller");
 
+            Company company = new(founded, "Company");
+            BrigadeCommander brigadeCommander = new("Andrii", "Koval", 30);
+            Brigade brigade = new(brigName, brigadeCommander, "Kyiv");
+
+            for (int j = 1; j <= brigadesCount; j++)
+            {
+                for (int i = 1; i <= workersCount; i++)
+                {
+                    Worker worker = new(i, "Serhii", "Pachov", 40, spec);
+                    brigade.AddWorker(worker);
+                }
+                company.AddBrigade(brigade);
+            }
+
+            int result = company.GetTotalWorkers();
+
+            Assert.AreEqual(expected, result);
+        }
     }
 
     [TestClass]
@@ -230,6 +256,29 @@ namespace Test
             }
 
             Assert.AreEqual(expected, brigade.Workers.Count);
+        }
+
+        [TestMethod]
+        [DataRow(1)]
+        [DataRow(14)]
+        [DataRow(5)]
+        public void GetWorkerCount_ValidInput_GetsWorkerCount(int workersCount)
+        {
+            DateTime founded = DateTime.Parse("2024-06-01");
+            Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), "Drywaller");
+
+            BrigadeCommander brigadeCommander = new("Andrii", "Koval", 30);
+            Brigade brigade = new("Brigade", brigadeCommander, "Kyiv");
+
+            for (int i = 1; i <= workersCount; i++)
+            {
+                Worker worker = new(i, "Serhii", "Pachov", 40, spec);
+                brigade.AddWorker(worker);
+            }
+
+            int result = brigade.GetWorkerCount();
+
+            Assert.AreEqual(workersCount, result);
         }
     }
 
@@ -372,6 +421,8 @@ namespace Test
 
             Assert.AreEqual(result, expected);
         }
+
+
     }
 
     [TestClass]

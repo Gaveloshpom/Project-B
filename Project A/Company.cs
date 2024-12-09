@@ -31,6 +31,11 @@ namespace Project_A
             throw new NotImplementedException();
         }
 
+        public int GetTotalWorkers() 
+        {
+            throw new NotImplementedException();
+        }
+
         public void PrintToDisplay() 
         {
             throw new NotImplementedException();
