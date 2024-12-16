@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,7 +28,15 @@ namespace Project_A
             }
         }
 
-        public Specialization Specialization { get; set; }
+        public Specialization Specialization 
+        { 
+            get { return specialization; }
+            set 
+            {
+                string input = value.ToString();
+                if(!Enum.TryParse<Specialization>(input, out specialization)) { throw new ArgumentException("Некоректний ввід спеціалізації"); };
+            } 
+        }
 
 
         public Worker(int id, string firstName, string lastName, int age, Specialization specialization) : base(firstName, lastName, age)

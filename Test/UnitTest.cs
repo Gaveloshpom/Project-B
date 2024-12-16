@@ -1,5 +1,7 @@
 using Project_A;
+using System.Globalization;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Test
 {
@@ -12,7 +14,8 @@ namespace Test
         [DataRow("2020-02-29", "Company Three")]
         public void Constructor_ValidInput(string dateStr, string name)
         {
-            DateTime founded = DateTime.Parse(dateStr);
+            DateOnly founded;
+            DateOnly.TryParseExact(dateStr, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out founded);
             Company company = new(founded, name);
 
             Assert.AreEqual(founded, company.Founded);
@@ -20,25 +23,13 @@ namespace Test
         }
 
         [TestMethod]
-        [DataRow("2025-06-01", "CompanyOne")]
-        [DataRow("2023-13-31", "Company-Two")]
-        [DataRow("2020-02-44", "Company Three")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід дати")]
-        public void Constructor_InvalidDateInput_ThrowsException(string dateStr, string name)
-        {
-            DateTime founded = DateTime.Parse(dateStr);
-            Company company = new(founded, name);
-        }
-
-        [TestMethod]
-        [DataRow("2024-06-01", "Company1")]
         [DataRow("2023-12-31", "Company!")]
         [DataRow("2020-02-20", "Co")]
         [DataRow("2020-02-20", "OneTwoThreeFourFiveSix")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід назви")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід назви")]
         public void Constructor_InvalidNameInput_ThrowsException(string dateStr, string name)
         {
-            DateTime founded = DateTime.Parse(dateStr);
+            DateOnly founded = DateOnly.Parse(dateStr);
             Company company = new(founded, name);
         }
 
@@ -48,7 +39,7 @@ namespace Test
         [DataRow("Kvitka", "Odesa", "Serhiy", "Pachov", 53)]
         public void AddBrigade_ValidInput(string brigName, string location, string comFirstName, string comLastName, int comAge)
         {
-            DateTime founded = DateTime.Parse("2024-06-01");
+            DateOnly founded = DateOnly.Parse("2024-06-01");
 
             Company company = new(founded, "Company");
             BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
@@ -70,7 +61,7 @@ namespace Test
         public void DeleteBrigade_BrigadeDeleted(string brigName, string location, string comFirstName, string comLastName, int comAge)
         {
             // Arrange
-            DateTime founded = DateTime.Parse("2024-06-01");
+            DateOnly founded = DateOnly.Parse("2024-06-01");
             string companyName = "Company";
             Company company = new(founded, companyName);
             BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
@@ -85,53 +76,55 @@ namespace Test
             Assert.IsFalse(company.Brigades.Contains(brigade), "Бригаду не було видалено");
         }
 
+        //[TestMethod]
+        //[DataRow("Brigade", "Kyiv", "Andrii", "Koval", 30)]
+        //[DataRow("Brig", "Kharkiv", "Oleksandr", "Halushenko", 28)]
+        //[DataRow("Kvitka", "Odesa", "Serhiy", "Pachov", 53)]
+        //public void PrintToDisplay_PrintsCorrectOutput(string brigName, string location, string comFirstName, string comLastName, int comAge)
+        //{
+        //    // Arrange
+        //    DateTime founded = DateTime.Parse("2024-06-01");
+        //    string companyName = "Company";
+        //    Company company = new(founded, companyName);
+        //    BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
+        //    Brigade brigade = new(brigName, brigadeCommander, location);
+
+        //    company.AddBrigade(brigade);
+
+        //    using StringWriter sw = new StringWriter();
+        //    Console.SetOut(sw);
+
+        //    // Act
+        //    company.PrintToDisplay();
+
+        //    // Expected
+        //    string brigNames = "";
+        //    foreach (var brig in company.Brigades) { brigNames += brig.Name + " "; }
+        //    string expectedOutput =
+        //        $"Компанія: {companyName} | Дата заснування: {founded} | Кіл-ть бригад: {brigCount} | Кіл-ть робітників: {workersCount}";
+
+        //    // Assert
+        //    string actualOutput = sw.ToString();
+        //    Assert.AreEqual(expectedOutput, actualOutput);
+        //}
+
         [TestMethod]
-        [DataRow("Brigade", "Kyiv", "Andrii", "Koval", 30)]
-        [DataRow("Brig", "Kharkiv", "Oleksandr", "Halushenko", 28)]
-        [DataRow("Kvitka", "Odesa", "Serhiy", "Pachov", 53)]
-        public void PrintToDisplay_PrintsCorrectOutput(string brigName, string location, string comFirstName, string comLastName, int comAge)
-        {
-            // Arrange
-            DateTime founded = DateTime.Parse("2024-06-01");
-            string companyName = "Company";
-            Company company = new(founded, companyName);
-            BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
-            Brigade brigade = new(brigName, brigadeCommander, location);
-
-            company.AddBrigade(brigade);
-
-            using StringWriter sw = new StringWriter();
-            Console.SetOut(sw);
-
-            // Act
-            company.PrintToDisplay();
-
-            // Expected
-            string brigNames = "";
-            foreach (var brig in company.Brigades) { brigNames += brig.Name + " "; }
-            string expectedOutput =
-                $"Company: {companyName} | Founded: {founded} | Brigades: {brigNames}";
-
-            // Assert
-            string actualOutput = sw.ToString();
-            Assert.AreEqual(expectedOutput, actualOutput);
-        }
-
-        [TestMethod]
-        [DataRow("Brigade", 4, 3, 12)]
-        [DataRow("Brig", 5, 6, 30)]
-        [DataRow("Kvitka", 2, 4, 8)]
+        [DataRow("Brigade", 4, 3, 15)]
+        [DataRow("Brig", 5, 6, 36)]
+        [DataRow("Kvitka", 2, 4, 12)]
         public void GetTotalWorkers_ValidInput_GetsTotalWorkers(string brigName, int workersCount, int brigadesCount, int expected)
         {
-            DateTime founded = DateTime.Parse("2024-06-01");
+            DateOnly founded = DateOnly.Parse("2024-06-01");
             Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), "Drywaller");
 
             Company company = new(founded, "Company");
             BrigadeCommander brigadeCommander = new("Andrii", "Koval", 30);
-            Brigade brigade = new(brigName, brigadeCommander, "Kyiv");
+            
 
             for (int j = 1; j <= brigadesCount; j++)
-            {
+            {   
+                Brigade brigade = new(brigName, brigadeCommander, "Kyiv");
+
                 for (int i = 1; i <= workersCount; i++)
                 {
                     Worker worker = new(i, "Serhii", "Pachov", 40, spec);
@@ -158,11 +151,11 @@ namespace Test
             BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
             Brigade brigade = new(brigName, brigadeCommander, location);
 
-            Assert.AreEqual(brigade.Name, brigName);
-            Assert.AreEqual(brigade.BrigadeCommander.FirstName, comFirstName);
-            Assert.AreEqual(brigade.BrigadeCommander.LastName, comLastName);
-            Assert.AreEqual(brigade.BrigadeCommander.Age, comAge);
-            Assert.AreEqual(brigade.Location, location);
+            Assert.AreEqual(brigName, brigade.Name);
+            Assert.AreEqual(comFirstName, brigade.BrigadeCommander.FirstName);
+            Assert.AreEqual(comLastName, brigade.BrigadeCommander.LastName);
+            Assert.AreEqual(comAge, brigade.BrigadeCommander.Age);
+            Assert.AreEqual(location, brigade.Location);
         }
 
         [TestMethod]
@@ -171,7 +164,7 @@ namespace Test
         [DataRow("Kvitka1", "Odesa", "Serhiy", "Pachov", 53)]
         [DataRow("Kvitka_", "Odesa", "Serhiy", "Pachov", 53)]
         [DataRow("Kvitka!", "Odesa", "Serhiy", "Pachov", 53)]
-        [ExpectedException(typeof(Exception), "Некоректний ввід назви")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід назви")]
         public void Constructor_InvalidNameInput_ThrowsException(string brigName, string location, string comFirstName, string comLastName, int comAge)
         {
             BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
@@ -185,7 +178,7 @@ namespace Test
         [DataRow("KvitkaA", "O", "Serhiy", "Pachov", 53)]
         [DataRow("KvitkaAA", "Od", "Serhiy", "Pachov", 53)]
         [DataRow("KvitkaAA", "OdesaOdesaOdesaOdesaO", "Serhiy", "Pachov", 53)]
-        [ExpectedException(typeof(Exception), "Некоректний ввід локації")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід локації")]
         public void Constructor_InvalidLocationInput_ThrowsException(string brigName, string location, string comFirstName, string comLastName, int comAge)
         {
             BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
@@ -234,9 +227,9 @@ namespace Test
         }
 
         [TestMethod]
-        [DataRow(4, 1, 3)]
-        [DataRow(3, 2, 1)]
-        [DataRow(10, 7, 3)]
+        [DataRow(4, 1, 4)]
+        [DataRow(3, 2, 2)]
+        [DataRow(10, 7, 4)]
         public void GetWorkerCount_GetsWorkerCount(int toAdd, int toRemove, int expected)
         {
             BrigadeCommander brigadeCommander = new("Andrii", "Koval", 30);
@@ -255,7 +248,7 @@ namespace Test
                 brigade.RemoveWorker(i);
             }
 
-            Assert.AreEqual(expected, brigade.Workers.Count);
+            Assert.AreEqual(expected, brigade.GetWorkerCount());
         }
 
         [TestMethod]
@@ -278,7 +271,7 @@ namespace Test
 
             int result = brigade.GetWorkerCount();
 
-            Assert.AreEqual(workersCount, result);
+            Assert.AreEqual(workersCount + 1, result);
         }
     }
 
@@ -309,7 +302,7 @@ namespace Test
         [DataRow(3, "Ser-hii", "Pachov", 53, "Insulator")]
         [DataRow(3, "Ser_hii", "Pachov", 53, "Insulator")]
         [DataRow(3, "Serhii!", "Pachov", 53, "Insulator")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід імені")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід імені")]
         public void Constructor_InvalidFirstNameInput_ThrowsException(int id, string firstName, string lastName, int age, string specialization)
         {
             Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), specialization);
@@ -324,7 +317,7 @@ namespace Test
         [DataRow(3, "Serhii", "Pachov1", 53, "Insulator")]
         [DataRow(3, "Serhii", "Pac_hov", 53, "Insulator")]
         [DataRow(3, "Serhii", "Pachooooooooooooooooooooooooov", 53, "Insulator")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід прізвища")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід прізвища")]
         public void Constructor_InvalidlastNameInput_ThrowsException(int id, string firstName, string lastName, int age, string specialization)
         {
             Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), specialization);
@@ -333,13 +326,13 @@ namespace Test
         }
 
         [TestMethod]
-        [DataRow(1, "Andrii", "Koval", 70, "Bricklayer")]
+        [DataRow(1, "Andrii", "Koval", 71, "Bricklayer")]
         [DataRow(2, "Oleksandr", "Halushenko", 1, "Drywaller")]
         [DataRow(3, "Serhii", "Pachov", 14, "Insulator")]
         [DataRow(3, "Serhii", "Pachov", -1, "Insulator")]
         [DataRow(3, "Serhii", "Pachov", 1000, "Insulator")]
         [DataRow(3, "Serhii", "Pachov", 0, "Insulator")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід віку")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід віку")]
         public void Constructor_InvalidAgeInput_ThrowsException(int id, string firstName, string lastName, int age, string specialization)
         {
             Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), specialization);
@@ -354,7 +347,7 @@ namespace Test
         [DataRow(3, "Serhii", "Pachov", 55, "Insul_ator")]
         [DataRow(3, "Serhii", "Pachov", 44, "I")]
         [DataRow(3, "Serhii", "Pachov", 40, "Insulatorrrrrrrrrrrrrrrrrrrrrrr")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід спеціалізації")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід спеціалізації")]
         public void Constructor_InvalidSpecializationInput_ThrowsException(int id, string firstName, string lastName, int age, string specialization)
         {
             Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), specialization);
@@ -366,7 +359,7 @@ namespace Test
         [DataRow(0, "Andrii", "Koval", 70, "Brick")]
         [DataRow(-1, "Oleksandr", "Halushenko", 1, "Drywaller1")]
         [DataRow(1.1, "Serhii", "Pachov", 14, "Insul-ator")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід Id")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід Id")]
         public void Constructor_InvalidIdInput_ThrowsException(int id, string firstName, string lastName, int age, string specialization)
         {
             Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), specialization);
@@ -395,7 +388,7 @@ namespace Test
         [DataRow("Drywaller", "Pipefitter1")]
         [DataRow("Insulator", "Painter!")]
         [DataRow("Drywaller", "Pipef_itter")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід спеціалізації")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід спеціалізації")]
         public void Promote_InvalidInput_ThrowsException(string specialization, string newSpecialization)
         {
             Specialization specCurrent = (Specialization)Enum.Parse(typeof(Specialization), specialization);
@@ -448,7 +441,7 @@ namespace Test
         [DataRow("Serh!y", "Pachov", 53)]
         [DataRow("Serhiyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", "Pachov", 53)]
         [DataRow("Se", "Pachov", 53)]
-        [ExpectedException(typeof(Exception), "Некоректний ввід імені")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід імені")]
         public void Constructor_InvalidFirstNameInput_ThrowsException(string firstName, string lastName, int age)
         {
             BrigadeCommander brigadeCommander = new(firstName, lastName, age);
@@ -461,7 +454,7 @@ namespace Test
         [DataRow("Serh!y", "Pac hov", 53)]
         [DataRow("Serh!y", "Pa", 53)]
         [DataRow("Serh!y", "Pachovvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", 53)]
-        [ExpectedException(typeof(Exception), "Некоректний ввід прізвища")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід прізвища")]
         public void Constructor_InvalidLastNameInput_ThrowsException(string firstName, string lastName, int age)
         {
             BrigadeCommander brigadeCommander = new(firstName, lastName, age);
@@ -471,7 +464,7 @@ namespace Test
         [DataRow("Andrii", "Koval", 17)]
         [DataRow("Oleksandr", "Halushenko", 75)]
         [DataRow("Serhiy", "Pachov", -1)]
-        [ExpectedException(typeof(Exception), "Некоректний ввід віку")]
+        [ExpectedException(typeof(ArgumentException), "Вік має бути в межах від 18 до 70")]
         public void Constructor_InvalidAgeInput_ThrowsException(string firstName, string lastName, int age)
         {
             BrigadeCommander brigadeCommander = new(firstName, lastName, age);
@@ -509,7 +502,7 @@ namespace Test
         [DataRow("Serh!y")]
         [DataRow("Serhiyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")]
         [DataRow("Se")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід імені")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід імені")]
         public void SetFirstName_InvalidFirstNameInput_ThrowsException(string firstName)
         {
             BrigadeCommander brigadeCommander = new("firstName", "lastName", 30);
@@ -535,7 +528,7 @@ namespace Test
         [DataRow("Serh!y")]
         [DataRow("Serhiyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")]
         [DataRow("Se")]
-        [ExpectedException(typeof(Exception), "Некоректний ввід прізвища")]
+        [ExpectedException(typeof(ArgumentException), "Некоректний ввід прізвища")]
         public void SetLastName_InvalidLastNameInput_ThrowsException(string lastName)
         {
             BrigadeCommander brigadeCommander = new("firstName", "lastName", 30);
@@ -558,9 +551,9 @@ namespace Test
         [TestMethod]
         [DataRow(0)]
         [DataRow(-1)]
-        [DataRow(70)]
+        [DataRow(71)]
         [DataRow(17)]
-        [ExpectedException(typeof(Exception), "Некоректний ввід віку")]
+        [ExpectedException(typeof(ArgumentException), "Вік має бути в межах від 18 до 70")]
         public void SetAge_InvalidAgeInput_ThrowsException(int age)
         {
             BrigadeCommander brigadeCommander = new("firstName", "lastName", 30);

@@ -42,8 +42,8 @@ namespace Project_A
             get { return age; }
             set
             {
-                if (value <= 18 || value > 70)
-                    throw new ArgumentException("Вік має бути в межах від 12 до 70");
+                if (value < 18 || value > 70)
+                    throw new ArgumentException("Вік має бути в межах від 18 до 70");
                 age = value;
             }
         }

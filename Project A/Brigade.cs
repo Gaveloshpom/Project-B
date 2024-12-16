@@ -26,14 +26,14 @@ namespace Project_A
             }
         }
         public BrigadeCommander BrigadeCommander { get; set; }
-        public List<Worker> Workers { get;}
+        public List<Worker> Workers { get { return workers; } }
         public string Location
         {
             get { return location; }
             set
             {
                 Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁїЇіІєЄґҐ]{3,20}$");
-                if (regex.IsMatch(value)) { this.name = value; }
+                if (regex.IsMatch(value)) { this.location = value; }
                 else { throw new ArgumentException("Некоректний ввід локації"); };
             }
         }
