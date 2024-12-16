@@ -11,6 +11,7 @@ namespace Project_A
         string FirstName { get; set; }
         string LastName { get; set; }
         int Age { get; set; }
-        string GetFullName();
+        string FullName { get; }
+        string GetFullInfo();
     }
 }

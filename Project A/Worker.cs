@@ -6,33 +6,55 @@ using System.Threading.Tasks;
 
 namespace Project_A
 {
-    public class Worker : IPerson
+    public class Worker : PersonBase, ICloneable
     {
         private int id;
-        private string firstName;
-        private string lastName;
-        private int age;
         private Specialization specialization;
 
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int Age { get; set; }
+
+        public int Id 
+        { 
+            get { return  id; }
+            set
+            {
+                string input = value.ToString();
+                int val;
+                if (!int.TryParse(input, out val))
+                {
+                    throw new ArgumentException("Ввід має бути числом");
+                };
+                id = value;
+            }
+        }
+
         public Specialization Specialization { get; set; }
+
+
+        public Worker(int id, string firstName, string lastName, int age, Specialization specialization) : base(firstName, lastName, age)
+        {
+            Id = id;
+            Specialization = specialization;
+        }
 
         public void Promote(Specialization newSpecialization) 
         {
-            throw new NotImplementedException();
+            if (Specialization == newSpecialization) { throw new ArgumentException("Помилка! Професія вже присвоєна"); }
+            Specialization = newSpecialization;
         }
 
         public string GetFullName()
         {
-            throw new NotImplementedException();
+            return $"{FirstName} {LastName}";
         }
 
-        public Worker(int id, string firstName, string lastName, int age, Specialization specialization)
+        public override string GetFullInfo() 
         {
-            throw new NotImplementedException();
+            return $"Worker: {FirstName} {LastName} {Age} - {Specialization}";
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

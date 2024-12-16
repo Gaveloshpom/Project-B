@@ -6,24 +6,19 @@ using System.Threading.Tasks;
 
 namespace Project_A
 {
-    public class BrigadeCommander: IPerson
+    public class BrigadeCommander : PersonBase
     {
-        private string firstName;
-        private string lastName;
-        private int age;
-
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int Age { get; set; }
-
-        public string GetFullName() 
+        public string GetFullName()
         {
-            throw new NotImplementedException();
+            return $"{FirstName} {LastName}";
         }
 
-        public BrigadeCommander(string firstName, string lastName, int age) 
+        public override string GetFullInfo()
         {
-            throw new NotImplementedException();
+            return $"Brigade Commander: {FirstName} {LastName} {Age}";
         }
+
+        public BrigadeCommander(string firstName, string lastName, int age) : base(firstName, lastName, age) {}
+
     }
 }
