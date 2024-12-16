@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -11,32 +12,58 @@ namespace Project_A
     {
         private string name;
         private BrigadeCommander brigadeCommander;
-        private List<Worker> workers;
+        private List<Worker> workers = new List<Worker> { };
         private string location;
 
-        public string Name { get; set; }
-        public BrigadeCommander BrigadeCommander { get; set; }
-        public List<Worker> Workers { get; set; }
-        public string Location;
-
-        public Brigade(string name, BrigadeCommander BrigadeCommander, string location) 
+        public string Name
         {
-            throw new NotImplementedException();
+            get { return name; }
+            set
+            {
+                Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁїЇіІєЄґҐ]{3,20}$");
+                if (regex.IsMatch(value)) { this.name = value; }
+                else { throw new ArgumentException("Некоректний ввід назви бригади"); };
+            }
+        }
+        public BrigadeCommander BrigadeCommander { get; set; }
+        public List<Worker> Workers { get;}
+        public string Location
+        {
+            get { return location; }
+            set
+            {
+                Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁїЇіІєЄґҐ]{3,20}$");
+                if (regex.IsMatch(value)) { this.name = value; }
+                else { throw new ArgumentException("Некоректний ввід локації"); };
+            }
+        }
+
+        public Brigade(string name, BrigadeCommander brigadeCommander, string location) 
+        {
+            Name = name;
+            BrigadeCommander = brigadeCommander;
+            Location = location;
         }
 
         public void AddWorker(Worker worker) 
         {
-            throw new NotImplementedException();
+            workers.Add(worker);
         }
 
         public bool RemoveWorker(int workerId) 
         {
-            throw new NotImplementedException();
+            try
+            {
+                int index = workers.FindIndex(worker => worker.Id == workerId);
+                workers.RemoveAt(index);
+                return true;
+            }
+            catch { return false; }
         }
 
         public int GetWorkerCount() 
         {
-            throw new NotImplementedException();
+            return workers.Count + 1;
         }
     }
 }
