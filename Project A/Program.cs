@@ -158,7 +158,9 @@ public class Program
 
                             if (compInfo.Length != 2) { throw new Exception("Некоректна кіл-ть даних"); }
 
-                            newCompany = new()
+                            newCompany = new(compInfo[1], compInfo[0]);
+
+                            Console.WriteLine("\nКомпанію успішно створено");
 
                             break;
                         }

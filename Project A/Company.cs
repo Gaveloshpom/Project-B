@@ -37,39 +37,39 @@ namespace Project_A
 
         public List<Brigade> Brigades { get { return brigades; } }
 
-        public Company(DateOnly founded, string name) 
+        public Company(string founded, string name) 
         {
-            Founded = founded;
+            Founded = toDate(founded);
             Name = name;
             brigades = new List<Brigade>();
         }
 
-        public static Company Parse(string s)
-        {
-            string[] input = s.Split(" ");
-            int count = input.Length;
+        //public static Company Parse(string s)
+        //{
+        //    string[] input = s.Split(" ");
+        //    int count = input.Length;
 
-            if (input.Length != 2)
-            {
-                throw new ArgumentException("Некоректна кіл-ть даних");
-            }
+        //    if (input.Length != 2)
+        //    {
+        //        throw new ArgumentException("Некоректна кіл-ть даних");
+        //    }
 
-            return new(toDate(input[1]), input[0]);
-        }
+        //    return new(toDate(input[1]), input[0]);
+        //}
 
-        public static bool TryParse(string s, out Company obj)
-        {
-            try
-            {
-                obj = Parse(s);
-                return true;
-            }
-            catch
-            {
-                obj = null;
-                return false;
-            }
-        }
+        //public static bool TryParse(string s, out Company obj)
+        //{
+        //    try
+        //    {
+        //        obj = Parse(s);
+        //        return true;
+        //    }
+        //    catch
+        //    {
+        //        obj = null;
+        //        return false;
+        //    }
+        //}
 
         public void AddBrigade(Brigade brigade) 
         {
