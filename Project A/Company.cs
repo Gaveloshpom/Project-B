@@ -12,7 +12,7 @@ namespace Project_A
     {
         private DateOnly founded;
         private string name;
-        private List<Brigade> brigades = new List<Brigade> { };
+        private List<Brigade> brigades;
 
         public DateOnly Founded 
         {
@@ -41,6 +41,34 @@ namespace Project_A
         {
             Founded = founded;
             Name = name;
+            brigades = new List<Brigade>();
+        }
+
+        public static Company Parse(string s)
+        {
+            string[] input = s.Split(" ");
+            int count = input.Length;
+
+            if (input.Length != 2)
+            {
+                throw new ArgumentException("Некоректна кіл-ть даних");
+            }
+
+            return new(toDate(input[1]), input[0]);
+        }
+
+        public static bool TryParse(string s, out Company obj)
+        {
+            try
+            {
+                obj = Parse(s);
+                return true;
+            }
+            catch
+            {
+                obj = null;
+                return false;
+            }
         }
 
         public void AddBrigade(Brigade brigade) 
@@ -65,7 +93,21 @@ namespace Project_A
 
         public void PrintToDisplay() 
         {
-            Console.WriteLine($"\nКомпанія: {Name} | Дата заснування: {Founded} | Кіл-ть бригад: {brigades.Count} | Кіл-ть робітників: {GetTotalWorkers()}");
+            Console.WriteLine($"Компанія: {Name} | Дата заснування: {Founded} | Кіл-ть бригад: {brigades.Count} | Кіл-ть робітників: {GetTotalWorkers()}");
+        }
+
+        public static DateOnly toDate(string input)
+        {
+            DateOnly date;
+
+            if (DateOnly.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            {
+                return date;
+            }
+            else
+            {
+                throw new Exception("Некоректний ввід дати");
+            }
         }
     }
 }

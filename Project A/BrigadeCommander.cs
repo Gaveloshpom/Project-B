@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 
 namespace Project_A
 {
-    public class BrigadeCommander : PersonBase
+    public class BrigadeCommander : PersonBase, ICloneable
     {
-        public string GetFullName()
-        {
-            return $"{FirstName} {LastName}";
-        }
-
         public override string GetFullInfo()
         {
-            return $"Brigade Commander: {FirstName} {LastName} {Age}";
+            return $"Бригадний командир: {FirstName} {LastName} {Age}";
         }
 
         public BrigadeCommander(string firstName, string lastName, int age) : base(firstName, lastName, age) {}
 
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

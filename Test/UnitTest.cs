@@ -109,9 +109,9 @@ namespace Test
         //}
 
         [TestMethod]
-        [DataRow("Brigade", 4, 3, 15)]
-        [DataRow("Brig", 5, 6, 36)]
-        [DataRow("Kvitka", 2, 4, 12)]
+        [DataRow("Brigade", 4, 3, 12)]
+        [DataRow("Brig", 5, 6, 30)]
+        [DataRow("Kvitka", 2, 4, 8)]
         public void GetTotalWorkers_ValidInput_GetsTotalWorkers(string brigName, int workersCount, int brigadesCount, int expected)
         {
             DateOnly founded = DateOnly.Parse("2024-06-01");
@@ -227,9 +227,9 @@ namespace Test
         }
 
         [TestMethod]
-        [DataRow(4, 1, 4)]
-        [DataRow(3, 2, 2)]
-        [DataRow(10, 7, 4)]
+        [DataRow(4, 1, 3)]
+        [DataRow(3, 2, 1)]
+        [DataRow(10, 7, 3)]
         public void GetWorkerCount_GetsWorkerCount(int toAdd, int toRemove, int expected)
         {
             BrigadeCommander brigadeCommander = new("Andrii", "Koval", 30);
@@ -271,7 +271,7 @@ namespace Test
 
             int result = brigade.GetWorkerCount();
 
-            Assert.AreEqual(workersCount + 1, result);
+            Assert.AreEqual(workersCount, result);
         }
     }
 
@@ -410,7 +410,7 @@ namespace Test
 
             Worker worker = new(1, firstName, lastName, 30, spec);
 
-            string result = worker.GetFullName();
+            string result = worker.FullName;
 
             Assert.AreEqual(result, expected);
         }
@@ -471,14 +471,14 @@ namespace Test
         }
 
         [TestMethod]
-        [DataRow("Andrii", "Koval", 28, "Andrii Koval")]
-        [DataRow("Oleksandr", "Halushenko", 45, "Oleksandr Halushenko")]
-        [DataRow("Serhiy", "Pachov", 53, "Serhiy Pachov")]
-        public void GetFullName_ValidInput_GetsFullName(string firstName, string lastName, int age, string expected)
+        [DataRow("Andrii", "Koval", 28, "Бригадний командир: Andrii Koval 28")]
+        [DataRow("Oleksandr", "Halushenko", 45, "Бригадний командир: Oleksandr Halushenko 45")]
+        [DataRow("Serhiy", "Pachov", 53, "Бригадний командир: Serhiy Pachov 53")]
+        public void GetFullInfo_ValidInput_GetsFullInfo(string firstName, string lastName, int age, string expected)
         {
             BrigadeCommander brigadeCommander = new(firstName, lastName, age);
 
-            string result = brigadeCommander.GetFullName();
+            string result = brigadeCommander.GetFullInfo();
 
             Assert.AreEqual(result, expected);
         }

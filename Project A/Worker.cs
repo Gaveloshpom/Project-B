@@ -47,18 +47,18 @@ namespace Project_A
 
         public void Promote(Specialization newSpecialization) 
         {
-            if (Specialization == newSpecialization) { throw new ArgumentException("Помилка! Професія вже присвоєна"); }
+            if (Specialization == newSpecialization) { throw new ArgumentException("Помилка! Спеціалізація вже присвоєна"); }
             Specialization = newSpecialization;
         }
 
-        public string GetFullName()
-        {
-            return $"{FirstName} {LastName}";
-        }
+        //public string GetFullName()
+        //{
+        //    return $"{FirstName} {LastName}";
+        //}
 
         public override string GetFullInfo() 
         {
-            return $"Worker: {FirstName} {LastName} {Age} - {Specialization}";
+            return $"Робітник: {FirstName} {LastName} {Age} - {Specialization}";
         }
 
         public object Clone()

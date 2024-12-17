@@ -43,6 +43,7 @@ namespace Project_A
             Name = name;
             BrigadeCommander = brigadeCommander;
             Location = location;
+            workers = new List<Worker>();
         }
 
         public void AddWorker(Worker worker) 
@@ -63,7 +64,7 @@ namespace Project_A
 
         public int GetWorkerCount() 
         {
-            return workers.Count + 1;
+            return workers.Count;
         }
     }
 }
