@@ -248,33 +248,6 @@
             brigades = new List<Brigade>();
         }
 
-        //public static Company Parse(string s)
-        //{
-        //    string[] input = s.Split(" ");
-        //    int count = input.Length;
-
-        //    if (input.Length != 2)
-        //    {
-        //        throw new ArgumentException("Некоректна кіл-ть даних");
-        //    }
-
-        //    return new(toDate(input[1]), input[0]);
-        //}
-
-        //public static bool TryParse(string s, out Company obj)
-        //{
-        //    try
-        //    {
-        //        obj = Parse(s);
-        //        return true;
-        //    }
-        //    catch
-        //    {
-        //        obj = null;
-        //        return false;
-        //    }
-        //}
-
         public void AddBrigade(Brigade brigade) 
         {
             brigades.Add(brigade);
