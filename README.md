@@ -54,7 +54,10 @@
      - Методи:
        - `AddBrigade(brigade)` — додає бригаду.
        - `RemoveBrigade(brigadeName)` — видаляє бригаду.
+       - `GetTotalWorkers()` — повертає кількість робітників в компанії.
        - `PrintToDisplay()` — виводить інформацію про компанію.
+       - `toDate(string input)` — перетворює string в DateOnly.
+
 
 ![image](https://github.com/user-attachments/assets/1b09748f-6887-41f1-9d39-f2a963b92bf7)
 
@@ -66,76 +69,266 @@
 ### 1. **Worker**
 
 ```csharp
-public class Worker : IPerson
-{
-    public int Id { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public int Age { get; set; }
-    public Specialization Specialization { get; set; }
+    public class Worker : PersonBase, ICloneable
+    {
+        private int id;
+        private Specialization specialization;
 
-    public void Promote(Specialization newSpecialization);
-    public string GetFullName();
+
+        public int Id 
+        { 
+            get { return  id; }
+            set
+            {
+                string input = value.ToString();
+                int val;
+                if (!int.TryParse(input, out val))
+                {
+                    throw new ArgumentException("Ввід має бути числом");
+                };
+                id = value;
+            }
+        }
+
+        public Specialization Specialization 
+        { 
+            get { return specialization; }
+            set 
+            {
+                string input = value.ToString();
+                if(!Enum.TryParse<Specialization>(input, out specialization)) { throw new ArgumentException("Некоректний ввід спеціалізації"); };
+            } 
+        }
+
+
+        public Worker(int id, string firstName, string lastName, int age, Specialization specialization) : base(firstName, lastName, age)
+        {
+            Id = id;
+            Specialization = specialization;
+        }
+
+        public void Promote(Specialization newSpecialization) 
+        {
+            if (Specialization == newSpecialization) { throw new ArgumentException("Помилка! Спеціалізація вже присвоєна"); }
+            Specialization = newSpecialization;
+        }
+
+        public override string GetFullInfo() 
+        {
+            return $"Робітник: {FirstName} {LastName} {Age} - {Specialization}";
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+    }
 }
 ```
 
 ### 2. **BrigadeCommander**
 
 ```csharp
-public class BrigadeCommander : IPerson
-{
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public int Age { get; set; }
+    public class BrigadeCommander : PersonBase, ICloneable
+    {
+        public override string GetFullInfo()
+        {
+            return $"Бригадний командир: {FirstName} {LastName} {Age}";
+        }
 
-    public string GetFullName();
-}
+        public BrigadeCommander(string firstName, string lastName, int age) : base(firstName, lastName, age) {}
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+    }
 ```
 
 ### 3. **Brigade**
 
 ```csharp
-public class Brigade
-{
-    public string Name { get; set; }
-    public BrigadeCommander BrigadeCommander { get; set; }
-    public List<Worker> Workers { get; set; }
-    public string Location;
+    public class Brigade
+    {
+        private string name;
+        private BrigadeCommander brigadeCommander;
+        private List<Worker> workers = new List<Worker> { };
+        private string location;
 
-    public void AddWorker(Worker worker);
-    public bool RemoveWorker(int workerId);
-    public int GetWorkerCount();
-}
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁїЇіІєЄґҐ]{3,20}$");
+                if (regex.IsMatch(value)) { this.name = value; }
+                else { throw new ArgumentException("Некоректний ввід назви бригади"); };
+            }
+        }
+        public BrigadeCommander BrigadeCommander { get; set; }
+        public List<Worker> Workers { get { return workers; } }
+        public string Location
+        {
+            get { return location; }
+            set
+            {
+                Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁїЇіІєЄґҐ]{3,20}$");
+                if (regex.IsMatch(value)) { this.location = value; }
+                else { throw new ArgumentException("Некоректний ввід локації"); };
+            }
+        }
+
+        public Brigade(string name, BrigadeCommander brigadeCommander, string location) 
+        {
+            Name = name;
+            BrigadeCommander = brigadeCommander;
+            Location = location;
+            workers = new List<Worker>();
+        }
+
+        public void AddWorker(Worker worker) 
+        {
+            workers.Add(worker);
+        }
+
+        public bool RemoveWorker(int workerId) 
+        {
+            try
+            {
+                int index = workers.FindIndex(worker => worker.Id == workerId);
+                workers.RemoveAt(index);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public int GetWorkerCount() 
+        {
+            return workers.Count;
+        }
+    }
 ```
 
 ### 4. **Company**
 
 ```csharp
-public class Company : IPrintable
-{
-    public DateTime Founded;
-    public string Name;
-    public List<Brigade> Brigades;
+    public class Company: IPrintable
+    {
+        private DateOnly founded;
+        private string name;
+        private List<Brigade> brigades;
 
-    public void AddBrigade(Brigade brigade);
-    public void DeleteBrigade(Brigade brigade);
-    public int GetTotalWorkers();
-    public void PrintToDisplay();
-}
+        public DateOnly Founded 
+        {
+            get { return founded; }
+            set 
+            {
+                if (value > DateOnly.FromDateTime(DateTime.Now)) { throw new ArgumentException("Некоректний ввід дати(Дата з майбутнього)"); }
+                
+                founded = value;
+            } 
+        }
+        public string Name 
+        {
+            get {return name;}
+            set
+            {
+                Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9\s\-\']{3,20}$");
+                if (regex.IsMatch(value)) { this.name = value; }
+                else { throw new ArgumentException("Некоректний ввід назви компанії"); };
+            }
+        }
+
+        public List<Brigade> Brigades { get { return brigades; } }
+
+        public Company(string founded, string name) 
+        {
+            Founded = toDate(founded);
+            Name = name;
+            brigades = new List<Brigade>();
+        }
+
+        //public static Company Parse(string s)
+        //{
+        //    string[] input = s.Split(" ");
+        //    int count = input.Length;
+
+        //    if (input.Length != 2)
+        //    {
+        //        throw new ArgumentException("Некоректна кіл-ть даних");
+        //    }
+
+        //    return new(toDate(input[1]), input[0]);
+        //}
+
+        //public static bool TryParse(string s, out Company obj)
+        //{
+        //    try
+        //    {
+        //        obj = Parse(s);
+        //        return true;
+        //    }
+        //    catch
+        //    {
+        //        obj = null;
+        //        return false;
+        //    }
+        //}
+
+        public void AddBrigade(Brigade brigade) 
+        {
+            brigades.Add(brigade);
+        }
+
+        public void DeleteBrigade(Brigade brigade)
+        {
+            brigades.Remove(brigade);
+        }
+
+        public int GetTotalWorkers() 
+        {
+            int result = 0;
+            foreach (var brig in Brigades) 
+            {
+                result += brig.GetWorkerCount();
+            };
+            return result;
+        }
+
+        public void PrintToDisplay() 
+        {
+            Console.WriteLine($"Компанія: {Name} | Дата заснування: {Founded} | Кіл-ть бригад: {brigades.Count} | Кіл-ть робітників: {GetTotalWorkers()}");
+        }
+
+        public static DateOnly toDate(string input)
+        {
+            DateOnly date;
+
+            if (DateOnly.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            {
+                return date;
+            }
+            else
+            {
+                throw new Exception("Некоректний ввід дати");
+            }
+        }
+    }
 ```
 
-### 5. **Інтерфейси**
+### 5. **Інтерфейси та абстрактні класи**
 
 ***IPerson***
 
 ```csharp
-public interface IPerson
-{
-    string FirstName { get; set; }
-    string LastName { get; set; }
-    int Age { get; set; }
-    string GetFullName();
-}
+    public interface IPerson
+    {
+        string FirstName { get; set; }
+        string LastName { get; set; }
+        int Age { get; set; }
+        string FullName { get; }
+        string GetFullInfo();
+    }
 ```
 
 ***IPrintable***
@@ -146,6 +339,64 @@ public interface IPrintable
     void PrintToDisplay();
 }
 ```
+
+***Personbase***
+
+```csharp
+    public abstract class PersonBase : IPerson
+    {
+
+        private string firstName;
+        private string lastName;
+        private int age;
+
+
+        public string FirstName
+        {
+            get { return firstName; }
+            set
+            {
+                Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁїЇіІєЄґҐ]{3,20}$");
+                if (regex.IsMatch(value)) { this.firstName = value; }
+                else { throw new ArgumentException("Некоректний ввід імені"); }
+            }
+        }
+
+        public string LastName
+        {
+            get { return lastName; }
+            set
+            {
+                Regex regex = new Regex(@"^[a-zA-Zа-яА-ЯёЁїЇіІєЄґҐ]{3,20}$");
+                if (regex.IsMatch(value)) { this.lastName = value; }
+                else { throw new ArgumentException("Некоректний ввід прізвища"); }
+            }
+        }
+
+        public int Age
+        {
+            get { return age; }
+            set
+            {
+                if (value < 18 || value > 70)
+                    throw new ArgumentException("Вік має бути в межах від 18 до 70");
+                age = value;
+            }
+        }
+
+        public string FullName { get { return $"{FirstName} {LastName}"; } }
+
+        protected PersonBase(string firstName, string lastName, int age)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Age = age;
+        }
+
+        public abstract string GetFullInfo();
+    }
+```
+
 ---
 ## Спеціалізації
 **Доступні наступні спеціалізації робітників:**
