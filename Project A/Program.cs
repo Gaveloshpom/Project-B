@@ -115,6 +115,7 @@ public class Program
         List<Company> companies = new List<Company>();
         while (running)
         {
+            //Обрати пункт початкового меню
             while (true)
             {
                 try
@@ -144,6 +145,7 @@ public class Program
 
             switch (choice)
             {
+                //Створення компанії
                 case 1:
                     while (true)
                     {   string[] compInfo;
@@ -160,6 +162,8 @@ public class Program
 
                             newCompany = new(compInfo[1], compInfo[0]);
 
+                            companies.Add(newCompany);
+
                             Console.WriteLine("\nКомпанію успішно створено");
 
                             break;
@@ -168,7 +172,7 @@ public class Program
 
                     }
                     break;
-                    //Створення компанії
+                    
 
                 case 2:
 
@@ -330,7 +334,7 @@ public class Program
                             case 4:
                                 Console.WriteLine("\n");
                                 company.PrintToDisplay();
-                                Console.WriteLine("Список бриигад:");
+                                Console.WriteLine("Список бригад:");
                                 for (int i = 0; i < company.Brigades.Count; i++)
                                 {
                                     Brigade brig = company.Brigades[i];

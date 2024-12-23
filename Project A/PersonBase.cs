@@ -57,6 +57,6 @@ namespace Project_A
             Age = age;
         }
 
-        public abstract string GetFullInfo();
+        public abstract string GetFullInfo();//!
     }
 }
