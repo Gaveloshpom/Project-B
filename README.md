@@ -59,7 +59,8 @@
        - `toDate(string input)` — перетворює string в DateOnly.
 
 
-![image](https://github.com/user-attachments/assets/a97efe54-5fef-41e1-a13f-2eb3b74d29c8)
+![image](https://github.com/user-attachments/assets/991c4805-7ff0-4cf7-a09f-d0f29c892c2f)
+
 
 ---
 
