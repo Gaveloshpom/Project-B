@@ -16,7 +16,7 @@ namespace Test
         {
             DateOnly founded;
             DateOnly.TryParseExact(dateStr, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out founded);
-            Company company = new(founded, name);
+            Company company = new(dateStr, name);
 
             Assert.AreEqual(founded, company.Founded);
             Assert.AreEqual(name, company.Name);
@@ -29,8 +29,7 @@ namespace Test
         [ExpectedException(typeof(ArgumentException), "Некоректний ввід назви")]
         public void Constructor_InvalidNameInput_ThrowsException(string dateStr, string name)
         {
-            DateOnly founded = DateOnly.Parse(dateStr);
-            Company company = new(founded, name);
+            Company company = new(dateStr, name);
         }
 
         [TestMethod]
@@ -39,9 +38,9 @@ namespace Test
         [DataRow("Kvitka", "Odesa", "Serhiy", "Pachov", 53)]
         public void AddBrigade_ValidInput(string brigName, string location, string comFirstName, string comLastName, int comAge)
         {
-            DateOnly founded = DateOnly.Parse("2024-06-01");
+            string dateStr = "2024-06-01";
 
-            Company company = new(founded, "Company");
+            Company company = new(dateStr, "Company");
             BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
             Brigade brigade = new(brigName, brigadeCommander, location);
 
@@ -61,9 +60,9 @@ namespace Test
         public void DeleteBrigade_BrigadeDeleted(string brigName, string location, string comFirstName, string comLastName, int comAge)
         {
             // Arrange
-            DateOnly founded = DateOnly.Parse("2024-06-01");
+            string dateStr = "2024-06-01";
             string companyName = "Company";
-            Company company = new(founded, companyName);
+            Company company = new(dateStr, companyName);
             BrigadeCommander brigadeCommander = new(comFirstName, comLastName, comAge);
             Brigade brigade = new(brigName, brigadeCommander, location);
 
@@ -114,10 +113,10 @@ namespace Test
         [DataRow("Kvitka", 2, 4, 8)]
         public void GetTotalWorkers_ValidInput_GetsTotalWorkers(string brigName, int workersCount, int brigadesCount, int expected)
         {
-            DateOnly founded = DateOnly.Parse("2024-06-01");
+            string dateStr = "2024-06-01";
             Specialization spec = (Specialization)Enum.Parse(typeof(Specialization), "Drywaller");
 
-            Company company = new(founded, "Company");
+            Company company = new(dateStr, "Company");
             BrigadeCommander brigadeCommander = new("Andrii", "Koval", 30);
             
 
